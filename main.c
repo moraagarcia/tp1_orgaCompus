@@ -42,9 +42,10 @@ int main(int argc, char **argv){
 	int option_index = 0;
 	bool multiple = false;
     bool divisor = false;
+    bool received_output_command = false;
     int offset = 1;
 	int option;
-	while ((option = getopt_long(argc, argv, "hV:dm:o", long_options, &option_index)) != -1) {
+	while ((option = getopt_long(argc, argv, "hVo:dm", long_options, &option_index)) != -1) {
     	switch (option) {
     		case 'm':
     			multiple = true;
@@ -54,6 +55,7 @@ int main(int argc, char **argv){
                 if (strcmp(optarg, "-") == 0) output_file = stdout; //verificar si pasaba algo dsp al cerrarste output o si ta todo piola
     			else output_file = fopen(optarg, "wt");
                 offset += 2;
+                received_output_command = true;
     			break;
     		case 'h':
     			display_help();
@@ -62,7 +64,6 @@ int main(int argc, char **argv){
     			fprintf(stdout,"%s \n", "Version 1.3");
     			return SUCCESS;
             case 'd':
-                //hago algo más??
                 divisor = true;
                 offset++;
                 break;
@@ -71,12 +72,7 @@ int main(int argc, char **argv){
 				return ERROR;
         }
     }
-
-    // int prueba = 9999999999;
-    // printf("tamaño en int %d \n", sizeof(prueba));
-    // char casteado = (char) prueba;
-    // printf("tamaño en char %d \n", sizeof(casteado));
-
+    if (!received_output_command) output_file = stdout;
     int n1 = atoll(argv[offset]);
     int n2 = atoll(argv[offset + 1]);
     if (n1 > INT_MAX || n1 < 2 || n2 > INT_MAX || n2 < 2){  //DUDA en el tp dice MAX_INT pero solo encontre que existe INT_MAX
@@ -87,22 +83,11 @@ int main(int argc, char **argv){
     if (!multiple && !divisor){
         result = mcd(n1, n2);
         int result2 = mcm(n1, n2);
-        //char* result_to_string = malloc(result_size);
-		//char result_to_string[result_size];
-        //snprintf(result_to_string, sizeof(char) + sizeof(int), "%c\n", result);
-        //sprintf(result_to_string, '\n');
-        //snprintf(result_to_string, sizeof(char) + sizeof(int), "%c\n", result2);
-        //sprintf(result_to_string, '\n');
-        // char* result_to_string = (char)result + '\n' + (char)result2 + '\n';
-		//fputs(result_to_string, output_file);
         fprintf(output_file, "%d\n%d\n", result, result2);
-        //fputs(output_file, (char*)result);
-        //fputs(output_file, (char*)result2);
         return SUCCESS;
     }
     else if (divisor) result = mcd(n1, n2);
 	else result = mcm(n1, n2);  //verificar si puede haber error acá
     fprintf(output_file, "%d\n", result);
-    //fputs((char)result, output_file);
 	return SUCCESS;
 }
