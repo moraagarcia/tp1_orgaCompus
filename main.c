@@ -68,7 +68,7 @@ int main(int argc, char **argv){
                 offset++;
                 break;
             default:
-            	fprintf(stderr, "%s \n", "Invalid command");
+            	//fprintf(stderr, "%s \n", "Invalid command");
 				return ERROR;
         }
     }
