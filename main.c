@@ -52,7 +52,7 @@ int main(int argc, char **argv){
                 offset++;
     			break;
     		case 'o':
-                if (strcmp(optarg, "-") == 0) output_file = stdout; //verificar si pasaba algo dsp al cerrarste output o si ta todo piola
+                if (strcmp(optarg, "-") == 0) output_file = stdout;
     			else output_file = fopen(optarg, "wt");
                 offset += 2;
                 received_output_command = true;
@@ -68,15 +68,15 @@ int main(int argc, char **argv){
                 offset++;
                 break;
             default:
-            	//fprintf(stderr, "%s \n", "Invalid command");
 				return ERROR;
         }
     }
     if (!received_output_command) output_file = stdout;
     int n1 = atoll(argv[offset]);
     int n2 = atoll(argv[offset + 1]);
-    if (n1 > INT_MAX || n1 < 2 || n2 > INT_MAX || n2 < 2){  //DUDA en el tp dice MAX_INT pero solo encontre que existe INT_MAX
+    if (n1 > INT_MAX || n1 < 2 || n2 > INT_MAX || n2 < 2){
 		fprintf(stderr, "%s \n", "Invalid numbers");
+        fclose(output_file);
 		return ERROR;
     }
     int result;
@@ -84,10 +84,12 @@ int main(int argc, char **argv){
         result = mcd(n1, n2);
         int result2 = mcm(n1, n2);
         fprintf(output_file, "%d\n%d\n", result, result2);
+        fclose(output_file);
         return SUCCESS;
     }
     else if (divisor) result = mcd(n1, n2);
-	else result = mcm(n1, n2);  //verificar si puede haber error acá
+	else result = mcm(n1, n2);
     fprintf(output_file, "%d\n", result);
+    fclose(output_file);
 	return SUCCESS;
 }
